@@ -28,7 +28,7 @@ Almacenar <- function(x){
   
 }
 
-Almocenar(536.78)
+Almacenar(536.78)
 
 #------------------------------
 #       Problema 2
