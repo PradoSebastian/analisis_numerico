@@ -371,8 +371,8 @@ summary {
 </div>
 
 
-<pre class="r"><code>#                           Taller 1</code></pre>
-<pre class="r"><code>#       Problema 1</code></pre>
+<pre class="r"><code>#                                   Taller 1</code></pre>
+<pre class="r"><code>#                                  Problema 1</code></pre>
 <pre class="r"><code>Almacenar &lt;- function(x){
   f&lt;-x
   y=0
@@ -387,17 +387,17 @@ summary {
   z&lt;-z-m
   z&lt;-z/10000
   f&lt;-z*10^y
-  E&lt;-abs(x-f)
+  E&lt;-abs(f-x)
   
   e&lt;-E/f
   
-  cat(&quot;El n?mero almacenado es&quot;, f, &quot;con un error de redondeo absoluto de&quot;, E, &quot;y un error de redondeo relativo de&quot;, e)
+  cat(&quot;El numero almacenado es&quot;, f, &quot;con un error de redondeo absoluto de&quot;, E, &quot;y un error de redondeo relativo de&quot;, e)
   
 }
 
 Almacenar(536.78)</code></pre>
-<pre><code>## El n?mero almacenado es 536.7 con un error de redondeo absoluto de 0.08 y un error de redondeo relativo de 0.0001490591</code></pre>
-<pre class="r"><code>#       Problema 2</code></pre>
+<pre><code>## El numero almacenado es 536.7 con un error de redondeo absoluto de 0.08 y un error de redondeo relativo de 0.0001490591</code></pre>
+<pre class="r"><code>#                                  Problema 2</code></pre>
 <pre class="r"><code>RaizCuadrada &lt;- function (n,E,x){
   
   y&lt;-(x+(n/x))/2
@@ -407,20 +407,33 @@ Almacenar(536.78)</code></pre>
     x&lt;-y
     y&lt;-(x+(n/x))/2
     c&lt;-c+1
+    cat(&quot;Iteracion:&quot;, c, &quot;, Valor de y:&quot;, y, &quot;\n&quot;)
   }
   
-  cat(&quot;La formula converge en la iteraci?n&quot;, c, &quot;con el valor de&quot;, y, &quot;para la raiz de&quot;, n, &quot;y el valor de y*y es&quot;, y*y)
+  cat(&quot;\nLa formula converge en la iteracion&quot;, c, &quot;con el valor de&quot;, y, &quot;para la raiz de&quot;, n, &quot;y el valor de y*y es&quot;, y*y)
+  
+  f&lt;-function(x) x^(1/2)
+  
+  plot(f, xlim = c(0, n+5), ylim=c(0, n/2), col = &quot;blue&quot;, ylab = &quot;y&quot;, main=&quot;RaizCuadrada&quot;)
+  abline(v= n, h = y, col= &quot;red&quot;)
+  points(n,y, col = &quot;green&quot;)
   
 }
 
-RaizCuadrada(7, 1e-8, 2.3)</code></pre>
-<pre><code>## La formula converge en la iteraci?n 3 con el valor de 2.645751 para la raiz de 7 y el valor de y*y es 7</code></pre>
-<pre class="r"><code>#       Problema 3</code></pre>
+RaizCuadrada(7, 1e-8, 2)</code></pre>
+<pre><code>## Iteracion: 1 , Valor de y: 2.647727 
+## Iteracion: 2 , Valor de y: 2.645752 
+## Iteracion: 3 , Valor de y: 2.645751 
+## Iteracion: 4 , Valor de y: 2.645751 
+## 
+## La formula converge en la iteracion 4 con el valor de 2.645751 para la raiz de 7 y el valor de y*y es 7</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<pre class="r"><code>#                                  Problema 3</code></pre>
 <pre class="r"><code>AproximacionEuler&lt;- function(x)
 {
   m&lt;-0
   p&lt;-0
-  while (m&lt;=5) 
+  while (m&lt;=5)
   {
     p&lt;-p+((x^m)/factorial(m))
     m&lt;-m+1
@@ -429,9 +442,10 @@ RaizCuadrada(7, 1e-8, 2.3)</code></pre>
   signif(p, 5)
 }
 
+
 AproximacionEuler(0.5)</code></pre>
 <pre><code>## [1] 1.6487</code></pre>
-<pre class="r"><code>#       Problema 4</code></pre>
+<pre class="r"><code>#                                  Problema 4</code></pre>
 <pre class="r"><code>CalculoError_AyR&lt;- function(v, Ev, t, Et)
 {
   
@@ -441,13 +455,13 @@ AproximacionEuler(0.5)</code></pre>
   
   ed&lt;-Ev/v+Et/t
   
-  cat(&quot;La distancia recorrida esta entre&quot;, d-Ed, &quot;y&quot;, d+Ed, &quot;debido a su error Absoluto de&quot;, Ed, &quot;y el error relativo es de&quot;, ed*100, &quot;%&quot;)
+  cat(&quot;La distancia recorrida esta entre&quot;, d-Ed, &quot;y&quot;, d+Ed, &quot;debido a su error Absoluto de:&quot;, Ed, &quot;y el error relativo es de:&quot;, ed*100, &quot;%&quot;)
   
 }
 
 CalculoError_AyR(4, 0.1, 5, 0.1)</code></pre>
-<pre><code>## La distancia recorrida esta entre 19.1 y 20.9 debido a su error Absoluto de 0.9 y el error relativo es de 4.5 %</code></pre>
-<pre class="r"><code>#       Problema 5</code></pre>
+<pre><code>## La distancia recorrida esta entre 19.1 y 20.9 debido a su error Absoluto de: 0.9 y el error relativo es de: 4.5 %</code></pre>
+<pre class="r"><code>#                                  Problema 5</code></pre>
 <pre class="r"><code>ResolverPolinomio &lt;- function(x0)
 {
   x2&lt;-x0*x0

@@ -68,7 +68,7 @@ AproximacionEuler<- function(x)
 {
   m<-0
   p<-0
-  while (m<=5) 
+  while (m<=5)
   {
     p<-p+((x^m)/factorial(m))
     m<-m+1
@@ -76,6 +76,7 @@ AproximacionEuler<- function(x)
   p<- p+(((x^m)/factorial(m))*exp(x))
   signif(p, 5)
 }
+
 
 AproximacionEuler(0.5)
 
