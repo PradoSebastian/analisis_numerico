@@ -94,7 +94,7 @@ CalculoError_AyR<- function(v, Ev, t, Et)
   
   ed<-Ev/v+Et/t
   
-  cat("La distancia recorrida esta entre", d-Ed, "y", d+Ed, "debido a su error Absoluto de", Ed, "y el error relativo es de", ed*100, "%")
+  cat("La distancia recorrida esta entre", d-Ed, "y", d+Ed, "debido a su error Absoluto de:", Ed, "y el error relativo es de:", ed*100, "%")
   
 }
 
@@ -114,3 +114,4 @@ ResolverPolinomio <- function(x0)
 }
 
 ResolverPolinomio(-2)
+
