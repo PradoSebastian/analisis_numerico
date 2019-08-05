@@ -2,35 +2,81 @@
 #                           Ejercicios raiz con metodos
 #-------------------------------------------------------------------------------
 
-g1 <- function(x){
+fe<-function(x)
+{
+  signif(exp(1), 5)^x
+}
+
+fpi<-function(x)
+{
+  signif(pi,5)*x
+}
+
+f1<-function(x)
+{
+  signif(exp(1), 5)^x-signif(pi,5)*x
+}
+
+g1 <- function(x)
+{
   (exp(x)/pi)
 }
-fg <- function(x){
-  (exp(x)-pi*x)
+
+g2 <- function(x)
+{
+  log(exp(x)/pi)
+}
+
+f1p<-function(x)
+{
+  signif(exp(1), 5)^x-signif(pi,5)
 }
 
 #-------------------------------------
 #              Punto Fijo
 #-------------------------------------
 
-PuntoFijo<-function(g, x0, tol){
+PuntoFijo<-function(g, x0, tol)
+{
   
+  plot(fe, xlim = c(-2,2), ylim = c(0,6), col = "blue", main = "Grafica de las Funciones", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  par(new=TRUE)
+  curve(fpi, type = "l", col="green", axes=FALSE, ylab = "y")
+  par(new=FALSE)
+  
+  plot(f1, xlim = c(-0.5,5), ylim = c(-2,5), col = "blue", main = "Grafica de la Función (resta)", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  abline(h=0, v=0, col="red")
+  
+  x<-c()
+  y<-c()
+  iteraciones<-c()
+  
+  m<-0
+   
   maxI<-100
   l<-0
   repeat
   {
     x1<-g(x0)
+    m2<-m
     m<-abs(x1-x0)
-    x0<-x1
-    l<-l+1
+    
+    if(l>=1)
+    {
+      x<-c(x, m2/x1)
+      y<-c(y, m/x1)
+    }
+    
     cat("Iteracion:", l, "\b, valor actual:", x1, "Error actual:", m, "\n")
     
-    points(l, m, col = "Red")
+    l<-l+1
     
     if( m<tol || l>maxI )
     {
       break;
     }
+    
+    x0<-x1
     
   }
   
@@ -42,11 +88,18 @@ PuntoFijo<-function(g, x0, tol){
   {
     cat("x* es aproximadamente", x1, "con error menor que", tol)
   }
+  
+  points(x1,0)
+  
+  plot(g, xlim = c(0,x[1]), ylim = c(0,y[1]), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "PuntoFijo", xlab = "Errores(i)", ylab = "Errores(i+1)")
+  lines(x, y, type = "l")
+  
+  x<-c(x,y[l-1])
+  iteraciones<-c(1:l)
+  plot(g, xlim = c(0,iteraciones[l]), ylim = c(0,x[1]), col = "white", main = "Iteraciones vs Errores", sub = "PuntoFijo", xlab = "Iteraciones", ylab = "Errores")
+  lines(iteraciones, x, type = "l")  
+  
 }
-
-plot(g0, xlim = c(0,7), ylim = c(0,0.200001), col = "white", main = "Iteraciones vs Errores", sub = "Punto Fijo", xlab = "Iteraciones", ylab = "Errores")
-
-abline(h = 0, col= "black")
 
 PuntoFijo(g1, 0, 1e-8)
 
@@ -56,12 +109,19 @@ PuntoFijo(g1, 0, 1e-8)
 
 biseccion = function(f, xa, xb, tol)
 {
+  plot(fe, xlim = c(-2,2), ylim = c(0,6), col = "blue", main = "Grafica de las Funciones", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  par(new=TRUE)
+  curve(fpi, type = "l", col="green", axes=FALSE, ylab = "y")
+  par(new=FALSE)
+  
+  plot(f, xlim = c(-0.5,5), ylim = c(-2,5), col = "blue", main = "Grafica de la Función (resta)", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  abline(h=0, v=0, col="red")
+  
   if( sign(f(xa)) == sign(f(xb)) )
   { 
     stop("f(xa) y f(xb) tienen el mismo signo") 
   }
-  # a = min(xa,xb)
-  # b = max(xa,xb)
+
   a = xa
   b = xb
   k = 0
@@ -69,8 +129,8 @@ biseccion = function(f, xa, xb, tol)
   
   x<-c()
   y<-c()
+  iteraciones<-c()
   
-  #Par imprimir estado
   cat("----------------------------------------------------------\n")
   cat(formatC( c("a","b","m","Error est."), width = -15, format = "f", flag = " "), "\n")
   cat("----------------------------------------------------------\n")
@@ -95,16 +155,14 @@ biseccion = function(f, xa, xb, tol)
     
     if(k>= 1)
     {
-      x<-c(x,dy)
-      y<-c(y,dx)
+      x<-c(x,dy/b)
+      y<-c(y,dx/b)
     }
     
     cat(formatC( c(a,b,m,dx), digits=7, width = -15, format = "f", flag = " "), "\n")
     k = k+1
     
     
-    
-    #points(k,dx, col = "red")
     
     #until
     if( dx < tol )
@@ -114,43 +172,39 @@ biseccion = function(f, xa, xb, tol)
       break;
     }
   } #repeat
-  lines (x,y, type = "l")
+  
+  points(m,0)
+  
+  plot(f, xlim = c(0,x[1]), ylim = c(0,y[1]), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "PuntoFijo", xlab = "Errores(i)", ylab = "Errores(i+1)")
+  lines(x, y, type = "l")
+  
+  x<-c(x,y[k-1])
+  iteraciones<-c(1:k)
+  plot(f, xlim = c(0,iteraciones[k]), ylim = c(0,x[1]), col = "white", main = "Iteraciones vs Errores", sub = "PuntoFijo", xlab = "Iteraciones", ylab = "Errores")
+  lines(iteraciones, x, type = "l") 
+  
 }
 
-plot(g0, xlim = c(0,0.5), ylim = c(0,0.5), col = "white", main = "Errores vs Errores", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
-
-abline(h = 0, col= "black")
-
-biseccion(g0, 0, 1, 1e-8)
+biseccion(f1, 0, 1, 1e-8)
+biseccion(f1, 1, 2, 1e-8)
 
 #-------------------------------------
 #               Newton
 #-------------------------------------
 
-f1<-function(x)
+newton = function(f, fp, x0, tol, maxiter)
 {
-  signif(exp(1), 5)^x-signif(pi,5)*x
-}
-
-f1p<-function(x)
-{
-  signif(exp(1), 5)^x-signif(pi,5)
-}
-
-f2<-function(x)
-{
-  (x-1.8974)^3
-}
-
-f2p<-function(x)
-{
-  2*(x-1.8974)^2
-}
-
-newton1 = function(f, fp, x0, tol, maxiter)
-{
+  plot(fe, xlim = c(-2,2), ylim = c(0,6), col = "blue", main = "Grafica de las Funciones", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  par(new=TRUE)
+  curve(fpi, type = "l", col="green", axes=FALSE, ylab = "y")
+  par(new=FALSE)
+  
+  plot(f, xlim = c(-0.5,5), ylim = c(-2,5), col = "blue", main = "Grafica de la Función (resta)", sub = "Newton", xlab = "x", ylab = "y")
+  abline(h=0, v=0, col="red")
+  
   x<-c()
   y<-c()
+  
   k = 0
   dx = 0
   # Imprimir estado
@@ -173,70 +227,51 @@ newton1 = function(f, fp, x0, tol, maxiter)
     
     
     # Imprimir iteraciones
-    cat(formatC( c(x1 ,f(x1), dx), digits=15, width = -15, format = "f", flag = " "), "\n")
-    x0 = x1
+    cat(formatC( c(x1 ,f(x1), dx/x1), digits=15, width = -15, format = "f", flag = " "), "\n")
     k = k+1
     # until
     if(dx <= tol || k > maxiter )
     {
       break;
     } 
+    x0 = x1
   }
   cat("---------------------------------------------------------------------------\n")
   if(k > maxiter){
     cat("Se alcanz? el m?ximo n?mero de iteraciones.\n")
-    cat("k = ", k, "Estado: x = ", x1, "Error estimado <= ", correccion)
+    cat("k = ", k, "Estado: x = ", x1, "Error estimado <= ", y[k-1])
   } else {
-    cat("k = ", k, " x = ", x1, " f(x) = ", f(x1), " Error estimado <= ", correccion) }
+    cat("k = ", k, " x = ", x1, " f(x) = ", f(x1), " Error estimado <= ", y[k-1]) }
   
+  points(x1,0)
+  
+  plot(f, xlim = c(0,x[1]), ylim = c(0,y[1]), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
   lines(x, y, type = "l")
   
+  x<-c(x,y[k-1])
+  iteraciones<-c(1:k)
+  plot(f, xlim = c(0,iteraciones[k]), ylim = c(0,x[1]), col = "white", main = "Iteraciones vs Errores", sub = "Newton", xlab = "Iteraciones", ylab = "Errores")
+  lines(iteraciones, x, type = "l")
 }
 
-plot(f1, xlim = c(0,1), ylim = c(0,0.5), col = "white", main = "Errores vs Errores", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
+newton(f1, f1p, 2, 1e-5, 100)
 
-abline(h = 0, col= "black")
-
-newton1(f2, f2p, 2, 1e-4, 100)
-
-Fx <- function(x) ((exp(1)^x) - (pi*x))
-F1x <- function(x) ((exp(1)^x)-pi)
-
-newton <- function(a,b,err) {
-  
-  # Grafico
-  x = seq(a,b,0.1)
-  plot(1*x,type="l",col="orange")
-  plot(x,Fx(x),type="l",col="blue")
-  abline(h=0,v=0,col="red")
-  
-  x0 = (a+b)/2;
-  it = 0
-  
-  repeat{
-    correccion = Fx(x0)/F1x(x0)
-    x1 = x0 - correccion
-    dx = abs(correccion)
-    x0 = x1
-    it = it+1
-    # until
-    if(dx <= err ) break;
-  }
-  cat("Iteraciones = ", it, " Resultado = ", x1, "\n")
-}
-
-newton(0,1,10e-8)
-newton(1,2,10e-8)
-
-#plot(f1, xlim = c(0,0.5), ylim = c(0,0.5), col = "white", main = "Errores vs Errores", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
-
-#biseccion(f2, 0, 2, 1e-8)
+newton(f1, f1p, 0.9, 1e-5, 100)
 
 #-------------------------------------
 #       Formula de la secante
 #-------------------------------------
 
-secante = function(f, x0, x1, tol, maxiter){
+secante = function(f, x0, x1, tol, maxiter)
+{
+  plot(fe, xlim = c(-2,2), ylim = c(0,6), col = "blue", main = "Grafica de las Funciones", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  par(new=TRUE)
+  curve(fpi, type = "l", col="green", axes=FALSE, ylab = "y")
+  par(new=FALSE)
+  
+  plot(f, xlim = c(-0.5,5), ylim = c(-2,5), col = "blue", main = "Grafica de la Función (resta)", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  abline(h=0, v=0, col="red")
+  
   f0 = f(x0)
   f1 = f(x1)
   k = 0
@@ -244,6 +279,7 @@ secante = function(f, x0, x1, tol, maxiter){
   
   x<-c()
   y<-c()
+  iteraciones<-c()
   
   while (abs(x1 - x0) > tol && k <= maxiter ) {
     
@@ -265,70 +301,51 @@ secante = function(f, x0, x1, tol, maxiter){
     k = k+1
     
     # Imprimir iteraciones
-    cat(x1, x2, dx, "\n")
+    cat("Iteracion:",k,", valor de x1:",x1, ", valor de x2:", x2, ", error:",dx, "\n")
   }
   if (k > maxiter) {
     warning("No se alcanz? el n?mero de iteraciones")
   }
   
+  points(x1,0)
   
-  lines(x,y, type = "l")
+  plot(f, xlim = c(0,max(x)), ylim = c(0,max(y)), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
+  lines(x, y, type = "l")
   
+  x<-c(x,y[k-1])
+  iteraciones<-c(1:k)
+  plot(f, xlim = c(0,iteraciones[k]), ylim = c(0,x[1]), col = "white", main = "Iteraciones vs Errores", sub = "Newton", xlab = "Iteraciones", ylab = "Errores")
+  lines(iteraciones, x, type = "l")
   
-  #return(list(cero=x2, f.cero=f2, iter=k, ErrorEst =abs(x2-x1)))
 }
 
+secante(f1, 0, 1, 1e-8, 100)
 
-plot(f2, xlim = c(0,0.04), ylim = c(0,0.04), col = "white", main = "Errores vs Errores", sub = "Secante", xlab = "Errores(i)", ylab = "Errores(i+1)")
-
-secante(f2, 0, 2, 1e-8, 100)
-
-#-------------------------------------
-#             taylor
-#-------------------------------------
-
-DD <- function(expr, name, order = 1) {
-  if(order < 1) stop("'order' must be >= 1")
-  if(order == 1) D(expr, name)
-  else DD(D(expr, name), name, order - 1)
-}
-
-taylorT = function(f, x0, a, n)
-{ 
-  g = parse(text=f)
-  
-  fx = function(x){eval(g[[1]])}
-  
-  smds = rep(NA, length=n+1)
-  for(k in 1:n){
-    g. = DD(g,"x", k)
-    fp = function(x) eval(g.)
-    smds[k]=1/factorial(k)*(x0-a)^k *fp(a)
-  }
-  smds[n+1] = fx(a)
-  sum(smds)
-}
-
-taylorT("exp(x)", 0.50001, 0.5, 5)
+secante(f1, 1, 2, 1e-8, 100)
 
 #----------------------------------------
 #             Posicion Falsa
 #----------------------------------------
 
-Fx <- function(x) ((exp(1)^x) - (pi*x))
-F1x <- function(x) ((exp(1)^x)-pi)
-
-falsaPosicion <- function(a, b, err) {
-  x = seq(a,b,0.1)
-  plot(x,Fx(x),type="l",col="blue")
-  abline(h=0,col="blue")
+falsaPosicion <- function(Fx, F1x, a, b, err) 
+{
   
-  #x = b
-  #d = (Fx(b)*a-Fx(a)*b)/(Fx(b)-Fx(a))
+  plot(fe, xlim = c(-2,2), ylim = c(0,6), col = "blue", main = "Grafica de las Funciones", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  par(new=TRUE)
+  curve(fpi, type = "l", col="green", axes=FALSE, ylab = "y")
+  par(new=FALSE)
+  
+  plot(Fx, xlim = c(-0.5,5), ylim = c(-2,5), col = "blue", main = "Grafica de la Función (resta)", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  abline(h=0, v=0, col="red")
+  
+  m<-c()
+  y<-c()
+  iteraciones<-c()
+  
   it = 0
   error = 1
   while (error > err) {
-    it = it + 1
+    
     x = (Fx(b)*a-Fx(a)*b)/(Fx(b)-Fx(a))
     
     if (Fx(x) == 0) {
@@ -342,15 +359,34 @@ falsaPosicion <- function(a, b, err) {
       a = x
     }
     
+    e2<-error
     error = abs(Fx(x)/F1x(x))
     
-    points(rbind(c(x,0)),pch=19,cex=0.7,col="red")
+    if(it>=1)
+    {
+      m<-c(m,e2)
+      y<-c(y,error)
+    }
     
     cat("X=",x,"\t","E=",error,"\t","Iteracion=",it,"\n")
+    
+    it = it + 1
   }
+  
+  points(x,0)
+  
+  plot(Fx, xlim = c(0,max(m)), ylim = c(0,max(y)), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
+  lines(m, y, type = "l")
+  
+  m<-c(m,y[it-1])
+  iteraciones<-c(1:it)
+  plot(Fx, xlim = c(0,iteraciones[it]), ylim = c(0,m[1]), col = "white", main = "Iteraciones vs Errores", sub = "Newton", xlab = "Iteraciones", ylab = "Errores")
+  lines(iteraciones, m, type = "l")
+  
 }
-falsaPosicion(0, 1, 10e-8)
-falsaPosicion(1, 2, 10e-8)
+
+falsaPosicion(f1,f1p,0, 1, 10e-8)
+falsaPosicion(f1,f1p,1, 2, 10e-8)
 
 #--------------------------------------------
 #               Aitken
@@ -358,6 +394,14 @@ falsaPosicion(1, 2, 10e-8)
 
 aitken = function(f, m, x0, tol)
 {
+  
+  plot(fe, xlim = c(-2,2), ylim = c(0,6), col = "blue", main = "Grafica de las Funciones", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  par(new=TRUE)
+  curve(fpi, type = "l", col="green", axes=FALSE, ylab = "y")
+  par(new=FALSE)
+  
+  iteraciones<-c()
+  
   Er1<-c()
   Er2<-c()
   
@@ -387,20 +431,25 @@ aitken = function(f, m, x0, tol)
       Er2<-c(Er2, E1)
     }
     
+    k = k + 1
+    
     if (dx < tol) break;
     
     x0 = x1
-    k = k + 1
+
     
   }
   
-  points(x1, 0)
+  points(x1,0)
   
-  plot(fx, xlim = c(0,Er1[1]), ylim = c(0,Er2[1]), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Aitken", xlab = "Errores(i)", ylab = "Errores(i+1)")
+  plot(fx, xlim = c(0,max(Er1)), ylim = c(0,max(Er2)), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
   lines(Er1, Er2, type = "l")
+  
+  Er1<-c(Er1,Er2[k])
+  iteraciones<-c(1:k)
+  plot(fx, xlim = c(0,iteraciones[k]), ylim = c(0,Er1[1]), col = "white", main = "Iteraciones vs Errores", sub = "Newton", xlab = "Iteraciones", ylab = "Errores")
+  lines(iteraciones, Er1, type = "l")
 }
-
-f = function(x) ((exp(1)^x) - (pi*x))
 
 aitken("2.7182^x-3.1415*x", 1, 2, 10^-8)
 
@@ -409,7 +458,16 @@ aitken("2.7182^x-3.1415*x", 1, 0, 10^-8)
 #----------------------------------------------
 #                 Steffensen
 #----------------------------------------------
-Steffensen<- function(tol,m,x0,f,fg){
+Steffensen<- function(tol,m,x0,f,fg)
+{
+  
+  plot(fe, xlim = c(-2,2), ylim = c(0,6), col = "blue", main = "Grafica de las Funciones", sub = "PuntoFijo", xlab = "x", ylab = "y")
+  par(new=TRUE)
+  curve(fpi, type = "l", col="green", axes=FALSE, ylab = "y")
+  par(new=FALSE)
+  
+  iteraciones<-c()
+  
   x<-0
   x1<-0
   x2<-1
@@ -441,6 +499,8 @@ Steffensen<- function(tol,m,x0,f,fg){
       Er1<-c(Er1, E2)
       Er2<-c(Er2, E1)
     }
+    
+    
     cat("\nX1 es:",x1, "con error relativo:", E1, "Iteracion:", k)
     if(abs(x - x0) < tol)
     {
@@ -450,14 +510,51 @@ Steffensen<- function(tol,m,x0,f,fg){
     x0 = x
     
   }
+  
   points(x,0)
-  plot(fg, xlim = c(0,1), ylim = c(0,1), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Steffensen", xlab = "Errores(i)", ylab = "Errores(i+1)")
+  
+  plot(fg, xlim = c(0,max(Er1)), ylim = c(0,max(Er2)), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Newton", xlab = "Errores(i)", ylab = "Errores(i+1)")
   lines(Er1, Er2, type = "l")
+  
+  Er1<-c(Er1,Er2[k-1])
+  cat(Er1)
+  iteraciones<-c(1:k-1)
+  plot(fg, xlim = c(0,max(iteraciones)), ylim = c(0,max(Er1)), col = "white", main = "Iteraciones vs Errores", sub = "Newton", xlab = "Iteraciones", ylab = "Errores")
+  lines(iteraciones, Er1, type = "l")
   
 }
 
-Steffensen(1e-08, 100, 2, g1,fg)
-Steffensen(1e-08, 100, 1, g1,fg)
+Steffensen(1e-08, 100, 2, g1,f1)
+Steffensen(1e-08, 100, 1, g1,f1)
+
+#-------------------------------------
+#             taylor
+#-------------------------------------
+
+# DD <- function(expr, name, order = 1) {
+#   if(order < 1) stop("'order' must be >= 1")
+#   if(order == 1) D(expr, name)
+#   else DD(D(expr, name), name, order - 1)
+# }
+# 
+# taylorT = function(f, x0, a, n)
+# { 
+#   g = parse(text=f)
+#   
+#   fx = function(x){eval(g[[1]])}
+#   
+#   smds = rep(NA, length=n+1)
+#   for(k in 1:n){
+#     g. = DD(g,"x", k)
+#     fp = function(x) eval(g.)
+#     smds[k]=1/factorial(k)*(x0-a)^k *fp(a)
+#   }
+#   smds[n+1] = fx(a)
+#   sum(smds)
+# }
+# 
+# taylorT("exp(x)", 0.50001, 0.5, 5)
+
 
 #------------------------------------------------------------------------------------------
 #                                       Tarea Libro Phyton
@@ -504,7 +601,7 @@ polar <- function (theta, r, color=4){
 f<-function(x) 3*sin(x)^3-1-4*sin(x)*cos(x)
 fp<-function(x) 9*cos(x)*sin(x)^2+4*sin(x)^2-4*cos(x)^2
 
-newton = function(f, fp, x0, tol, maxiter)
+newtonP = function(f, fp, x0, tol, maxiter)
 {
   dim <- seq(0, 2*pi, by=pi/300) 
   r=3*sin(dim)^3-1
@@ -576,5 +673,5 @@ newton = function(f, fp, x0, tol, maxiter)
   lines(iteraciones, x, type = "l")
 }
 
-newton(f, fp, pi/2, 1e-5, 100)
+newtonP(f, fp, pi/2, 1e-5, 100)
 
