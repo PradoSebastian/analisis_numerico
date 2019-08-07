@@ -2,9 +2,142 @@
 #                                       Tarea Libro Phyton
 #------------------------------------------------------------------------------------------
 
-#----------------------------------
-#           Tarea Integral
-#----------------------------------
+#----------------------------------------------
+#               Punto Libre = 8
+#----------------------------------------------
+Steffensen<- function(tol,m,x0,f,fg){
+  x<-0
+  x1<-0
+  x2<-1
+  
+  Er1<-c()
+  Er2<-c()
+  
+  k<-1
+  E1<-0
+  
+  
+  
+  plot(fg, xlim = c(-0.5,5), ylim = c(-2,5), col = "blue", main = "Grafica funcion", sub = "Steffensen", xlab = "x", ylab = "y")
+  abline(h = 0, v=0, col= "red")
+  
+  
+  while(k<=m )
+  {
+    x1 = f(x0)
+    x2 = f(x1)
+    x = (x0 - ((x1-x0)^2)/(x2-2*x1+x0))
+    
+    E2<-E1
+    E1<-abs(x-x0)/x
+    
+    
+    if(k > 1)
+    {
+      Er1<-c(Er1, E2)
+      Er2<-c(Er2, E1)
+    }
+    cat("\nX1 es:",x1, "con error relativo:", E1, "Iteracion:", k)
+    if(abs(x - x0) < tol)
+    {
+      break
+    }
+    k<-k+1
+    x0 = x
+    
+  }
+  points(x,0)
+  plot(fg, xlim = c(0,1), ylim = c(0,1), col = "white", main = "Errores(i) vs Errores(i+1)", sub = "Steffensen", xlab = "Errores(i)", ylab = "Errores(i+1)")
+  lines(Er1, Er2, type = "l")
+  return(x)
+  
+}
+
+g1 <- function(x){
+  exp(sin(x))
+}
+fg <- function(x){
+  (sin(x)-log(x))
+}
+Steffensen(1e-08,100,2,g1,fg)
+
+#--------------------------------------------------------------------
+#                     Ejercicio número 13
+#--------------------------------------------------------------------
+
+newtonraphson = function(fun, der, x0, tol = 0.000000005, maxiter = 100)
+{ 
+  eje_x = c()
+  eje_y = c()
+  errores = c()
+  cont = 0
+  # f = string
+  numiter = 0 
+  g = parse(text=fun) # parse devuelve tipo "expression"
+  g. = parse(text=der) # parse devuelve tipo "expression"
+  fx = function(x){eval(g)} # convertir f a función
+  fp = function(x){eval(g.)} # convertir f' a función
+  
+  correccion = -fx(x0)/fp(x0)
+  cat( "\n", formatC ( c( "Iteracion", "Cero", "f(cero)", "error"), width = 10, format = "d", flag = " "  ), "\n")
+  
+  plot(fx, xlim = c(-0.5,5), ylim = c(-2,5), col = "blue", main = "Solución Newton", sub = "Punto 13", xlab = "x", ylab = "y")
+  abline(h = 0, v=0, col= "red")
+  
+  while (abs(correccion) >= tol && numiter <= maxiter)
+  {
+    cont = cont + 1
+    numiter = numiter + 1 
+    if (fp(x0) == 0) stop("División por cero")
+    x1 = x0 + correccion 
+    errores[cont] = abs((x1-x0))/x1
+    correccion = -fx(x1)/fp(x1)
+    cat( formatC( c(numiter, x0, fx(x0), errores[cont] ), digits = 15, width = -15, format = "f", flag = "  "  ), "\n" )
+    x0 = x1 
+  }
+  
+  if (numiter > maxiter)
+  {
+    warning("Se alcanzó el máximo número de iteraciones.")
+    cat("Estado:\n")
+    cat("k = ", k, "x = ", x1, " f(x) = ", f(x1), "Error estimado <= ", correccion)
+  }
+  else 
+  {
+    iter = c(1:cont)
+    cont_n = 0;
+    cont_e = 0;
+    
+    repeat
+    {
+      eje_x[cont_n] = errores[cont_e]
+      eje_y[cont_n] = errores[cont_e+1]
+      cont_n = cont_n + 1
+      cont_e = cont_e + 1;
+      
+      if (cont_n == cont)
+      {
+        break;
+      }
+    }
+    
+    plot(eje_x, eje_y, col = "red")
+    lines(eje_x,eje_y, type="l",  col = "green")
+    plot(iter, errores, col ="red")
+    lines(iter,errores, type="l" , col = "green")
+    
+    
+    return(list(cero = x0, f.cero = fx(x0), numeroiter=numiter, error.est = correccion)) 
+    
+  }
+}
+
+
+newtonraphson("x^3-4","3*x^2", 2, 0.00000005, 10)
+
+#-----------------------------------------------
+#           Tarea Integral = Punto 15
+#-----------------------------------------------
 
 riemman = function(f, a, b, n)
 {
